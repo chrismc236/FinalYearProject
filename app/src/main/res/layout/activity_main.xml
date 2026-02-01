@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+        <!-- Toolbar at the top -->
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+            android:elevation="4dp"/>
+
+        <!-- Your existing content wrapped in RelativeLayout -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="16dp">
+
+                <!-- Title -->
+                <TextView
+                    android:id="@+id/titleText"
+                    android:text="@string/trekkr"
+                    android:textSize="24sp"
+                    android:textStyle="bold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <!-- Image Preview Using Glide -->
+                <ImageView
+                    android:id="@+id/sampleImage"
+                    android:layout_below="@id/titleText"
+                    android:layout_marginTop="12dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/placeholder" />
+
+                <!-- Upload Button -->
+                <Button
+                    android:id="@+id/openUploadActivity"
+                    android:layout_below="@id/sampleImage"
+                    android:layout_marginTop="16dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/upload_trail_photo" />
+
+                <!-- Tutorials List Button -->
+                <Button
+                    android:id="@+id/openTutorialsButton"
+                    android:layout_below="@id/openUploadActivity"
+                    android:layout_marginTop="12dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/tutorial_videos" />
+
+                <!-- Settings Button -->
+                <Button
+                    android:id="@+id/openSettings"
+                    android:layout_below="@id/openTutorialsButton"
+                    android:layout_marginTop="12dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/change_app_appearance" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerView"
+                    android:layout_below="@id/openSettings"
+                    android:layout_above="@id/loadingBar"
+                    android:layout_marginTop="16dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+                <!-- Progress Bar -->
+                <ProgressBar
+                    android:id="@+id/loadingBar"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="16dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone" />
+
+                <!-- Floating Action Button -->
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/fabAddPost"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_margin="16dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="Add new post"
+                    android:src="@android:drawable/ic_input_add"
+                    app:backgroundTint="@color/purple_500"
+                    app:tint="@android:color/white"/>
+
+        </RelativeLayout>
+
+</LinearLayout>

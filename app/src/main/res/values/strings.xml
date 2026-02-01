@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">Trekkr</string>
+    <string name="save">Save</string>
+    <string name="description">Description</string>
+    <string name="place_title">Place Title</string>
+    <string name="take_picture">Take Picture</string>
+    <string name="settings">Settings</string>
+    <string name="tutorial_videos">Tutorial Videos</string>
+    <string name="upload_trail_photo">Upload Trail Photo</string>
+    <string name="hike_explorer">Hike Explorer</string>
+    <string name="change_app_appearance">Change App Appearance</string>
+    <string name="cardimage">cardImage</string>
+    <string name="trekkr">Trekkr</string>
+</resources>
