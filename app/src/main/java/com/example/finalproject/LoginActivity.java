@@ -18,7 +18,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private EditText emailInput, passwordInput;
     private Button btnLogin;
-    private TextView tvSignUp;
+    private TextView tvSignUp, tvForgotPassword;
     private ProgressBar progressBar;
 
     private FirebaseAuth firebaseAuth;
@@ -31,10 +31,12 @@ public class LoginActivity extends AppCompatActivity {
         // Initialize Firebase Auth
         firebaseAuth = FirebaseAuth.getInstance();
 
+        // Initialize views
         emailInput = findViewById(R.id.emailInput);
         passwordInput = findViewById(R.id.passwordInput);
         btnLogin = findViewById(R.id.btnLogin);
         tvSignUp = findViewById(R.id.tvSignUp);
+        tvForgotPassword = findViewById(R.id.tvForgotPassword);
         progressBar = findViewById(R.id.progressBar);
 
         // Login button click
@@ -45,6 +47,12 @@ public class LoginActivity extends AppCompatActivity {
             Intent intent = new Intent(LoginActivity.this, SignUpActivity.class);
             startActivity(intent);
         });
+
+        // Forgot password text click
+        tvForgotPassword.setOnClickListener(v -> {
+            Intent intent = new Intent(LoginActivity.this, ForgotPasswordActivity.class);
+            startActivity(intent);
+        });
     }
 
     @Override
@@ -53,6 +61,7 @@ public class LoginActivity extends AppCompatActivity {
         // Check if user is already logged in
         FirebaseUser currentUser = firebaseAuth.getCurrentUser();
         if (currentUser != null) {
+            // User is logged in, go to main activity
             goToMainActivity();
         }
     }
@@ -61,6 +70,7 @@ public class LoginActivity extends AppCompatActivity {
         String email = emailInput.getText().toString().trim();
         String password = passwordInput.getText().toString().trim();
 
+        // Validation
         if (email.isEmpty()) {
             emailInput.setError("Email is required");
             emailInput.requestFocus();

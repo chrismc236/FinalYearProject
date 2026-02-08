@@ -1,153 +1,150 @@
 package com.example.finalproject;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.Toast;
-import androidx.appcompat.widget.Toolbar;
 
-import com.example.finalproject.adapters.PlaceAdapter;
-import com.example.finalproject.models.Place;
+import com.example.finalproject.fragments.HomeFragment;
+import com.example.finalproject.fragments.ProfileFragment;
+import com.example.finalproject.fragments.SearchFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.*;
-
-import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-    private RecyclerView recyclerView;
-    private FloatingActionButton fabAddPost;
-    private Toolbar toolbar;
-    private ArrayList<Place> placeList;
-    private PlaceAdapter adapter;
-    private DatabaseReference dbRef;
-    private static final int ADD_PLACE_REQUEST = 1001;
-
     private FirebaseAuth firebaseAuth;
+    private Toolbar toolbar;
+
+    // Bottom navigation buttons
+    private ImageButton btnHome;
+    private ImageButton btnMap;
+    private FloatingActionButton fabAdd;
+    private ImageButton btnSearch;
+    private ImageButton btnProfile;
+
+    private Fragment currentFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        applyTheme();
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
 
+        // Initialize Firebase Auth
         firebaseAuth = FirebaseAuth.getInstance();
 
-        if(firebaseAuth.getCurrentUser() == null){
-            // the user is not logged in, should never get to this point, redirects to login
-            Intent i = new Intent(MainActivity.this, LoginActivity.class);
-            startActivity(i);
+        // Check if user is logged in
+        if (firebaseAuth.getCurrentUser() == null) {
+            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+            startActivity(intent);
             finish();
             return;
         }
 
-// check firebase is working
-        checkFirebaseInitialization();
+        setContentView(R.layout.activity_main);
 
-        // Toolbar setup
+        // Set up toolbar
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        if (getSupportActionBar() != null){
-            getSupportActionBar().setTitle("TREKKR");
+        // Set toolbar title
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle("Trekkr");
         }
 
-        fabAddPost = findViewById(R.id.fabAddPost);
-        fabAddPost.setOnClickListener(v -> {
-                    Intent i = new Intent(MainActivity.this, AddPlaceActivity.class);
-                    startActivity(i);
-        });
+        // Initialize bottom navigation buttons
+        btnHome = findViewById(R.id.btnHome);
+        btnMap = findViewById(R.id.btnMap);
+        fabAdd = findViewById(R.id.fabAdd);
+        btnSearch = findViewById(R.id.btnSearch);
+        btnProfile = findViewById(R.id.btnProfile);
 
-        String userName = firebaseAuth.getCurrentUser().getEmail();
-        Toast.makeText(this, "Welcome " + userName, Toast.LENGTH_SHORT).show();
+        // Set up bottom navigation click listeners
+        setupBottomNavigation();
 
-// --- Initialize UI ---
-        FloatingActionButton fab = findViewById(R.id.fabAddPost);
-        recyclerView = findViewById(R.id.recyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-// Buttons
-        Button btnUpload = findViewById(R.id.openUploadActivity);
-        Button btnTutorial = findViewById(R.id.openTutorialsButton);
-        Button btnSettings = findViewById(R.id.openSettings);
-
-// --- Setup adapter ---
-        placeList = new ArrayList<>();
-        adapter = new PlaceAdapter(this, placeList);
-        recyclerView.setAdapter(adapter);
-
-// --- Firebase reference ---
-        dbRef = FirebaseDatabase.getInstance().getReference("places");
-
-// --- Load places from Firebase ---
-        loadPlaces();
-
-// --- FAB action ---
-        fab.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this, AddPlaceActivity.class);
-            startActivityForResult(intent, ADD_PLACE_REQUEST);
-        });
-
-// --- Button actions ---
-        btnUpload.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this, AddPlaceActivity.class);
-            startActivityForResult(intent, ADD_PLACE_REQUEST);
-        });
-
-        btnTutorial.setOnClickListener(v -> {
-            startActivity(new Intent(MainActivity.this, TutorialActivity.class));
-        });
-
-        btnSettings.setOnClickListener(v -> {
-            SharedPreferences prefs = getSharedPreferences("settings", MODE_PRIVATE);
-            boolean dark = prefs.getBoolean("darkMode", false);
-            prefs.edit().putBoolean("darkMode", !dark).apply();
-            recreate(); // restart activity to apply theme
-        });
-
+        // Load Home Fragment by default
+        if (savedInstanceState == null) {
+            currentFragment = new HomeFragment();
+            loadFragment(currentFragment);
+            highlightButton(btnHome);
+        }
     }
 
-    private void loadPlaces() {
-        dbRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                placeList.clear();
-                for (DataSnapshot ds : snapshot.getChildren()) {
-                    Place place = ds.getValue(Place.class);
-                    if (place != null) {
-                        place.setId(ds.getKey());
-                        placeList.add(place);
-                    }
-                }
-                adapter.notifyDataSetChanged();
+    private void setupBottomNavigation() {
+        // Home button - Refresh if already on home, otherwise go to home
+        btnHome.setOnClickListener(v -> {
+            if (currentFragment instanceof HomeFragment) {
+                // Refresh the current home fragment
+                loadFragment(new HomeFragment());
+                Toast.makeText(this, "Feed refreshed", Toast.LENGTH_SHORT).show();
+            } else {
+                // Navigate to home
+                currentFragment = new HomeFragment();
+                loadFragment(currentFragment);
             }
+            highlightButton(btnHome);
+        });
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(MainActivity.this, "Failed to load places: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+        // Map button - Open Google Maps
+        btnMap.setOnClickListener(v -> {
+            try {
+                // Open Google Maps
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(Uri.parse("geo:0,0?q="));
+                intent.setPackage("com.google.android.apps.maps");
+                startActivity(intent);
+            } catch (Exception e) {
+                // If Google Maps is not installed, open in browser
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(Uri.parse("https://maps.google.com"));
+                startActivity(intent);
             }
+            highlightButton(btnMap);
+        });
+
+        // Add button (Large FAB)
+        fabAdd.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, AddPlaceActivity.class);
+            startActivity(intent);
+        });
+
+        // Search button - Open SearchFragment
+        btnSearch.setOnClickListener(v -> {
+            currentFragment = new SearchFragment();
+            loadFragment(currentFragment);
+            highlightButton(btnSearch);
+        });
+
+        // Profile button - Open ProfileFragment
+        btnProfile.setOnClickListener(v -> {
+            currentFragment = new ProfileFragment();
+            loadFragment(currentFragment);
+            highlightButton(btnProfile);
         });
     }
 
-    private void applyTheme() {
-        SharedPreferences prefs = getSharedPreferences("settings", MODE_PRIVATE);
-        boolean dark = prefs.getBoolean("darkMode", false);
+    private void loadFragment(Fragment fragment) {
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragmentContainer, fragment)
+                .commit();
+    }
 
-        if (dark) {
-            setTheme(R.style.Theme_MySpot_Dark);
-        } else {
-            setTheme(R.style.Theme_MySpot_Light);
-        }
+    private void highlightButton(ImageButton selectedButton) {
+        // Reset all buttons to default color
+        btnHome.setColorFilter(getResources().getColor(R.color.text_secondary));
+        btnMap.setColorFilter(getResources().getColor(R.color.text_secondary));
+        btnSearch.setColorFilter(getResources().getColor(R.color.text_secondary));
+        btnProfile.setColorFilter(getResources().getColor(R.color.text_secondary));
+
+        // Highlight selected button
+        selectedButton.setColorFilter(getResources().getColor(R.color.primary_coral));
     }
 
     @Override
@@ -158,71 +155,20 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
-        if (item.getItemId() == R.id.menuToggleTheme) {
-            SharedPreferences prefs = getSharedPreferences("settings", MODE_PRIVATE);
-            boolean dark = prefs.getBoolean("darkMode", false);
-            prefs.edit().putBoolean("darkMode", !dark).apply();
-            recreate();
-            return true;
-        }
-
-        if(item.getItemId() == R.id.menu_logout){
-            FirebaseAuth.getInstance().signOut();
-            Toast.makeText(this, "Logged out successfully", Toast.LENGTH_SHORT).show();
-
-            Intent i = new Intent(MainActivity.this, LoginActivity.class);
-            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(i);
-            finish();
-            return true;
-        }
-
-        if(item.getItemId() == R.id.menu_profile){
-            // TODO open profile activity
-            Toast.makeText(this, "Profile page coming soon", Toast.LENGTH_SHORT).show();
+        // Handle menu item clicks (for theme changing, etc.)
+        if (item.getItemId() == R.menu.main_menu) {
+            Toast.makeText(this, "Theme changing coming soon!", Toast.LENGTH_SHORT).show();
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == ADD_PLACE_REQUEST && resultCode == RESULT_OK) {
-            if (data != null && data.getBooleanExtra("upload_success", false)) {
-                Toast.makeText(this, "Upload successful!", Toast.LENGTH_SHORT).show();
-                // optionally refresh your RecyclerView here
-            }
+    protected void onResume() {
+        super.onResume();
+        // Reload home fragment when returning to app
+        if (currentFragment instanceof HomeFragment) {
+            loadFragment(new HomeFragment());
         }
     }
-
-    public void checkFirebaseInitialization() {
-// 1. Check if FirebaseApp is initialized
-        if (FirebaseApp.getApps(this).isEmpty()) {
-            Toast.makeText(this, "Firebase NOT initialized!", Toast.LENGTH_LONG).show();
-            return;
-        } else {
-            Toast.makeText(this, "Firebase initialized successfully!", Toast.LENGTH_SHORT).show();
-        }
-
-// 2. Check DatabaseReference
-        DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("places");
-        if (dbRef == null) {
-            Toast.makeText(this, "Database reference is null!", Toast.LENGTH_LONG).show();
-            return;
-        } else {
-            Toast.makeText(this, "Database reference: " + dbRef.toString(), Toast.LENGTH_SHORT).show();
-        }
-
-// 3. Try generating a push key
-        String id = dbRef.push().getKey();
-        if (id == null) {
-            Toast.makeText(this, "Failed to generate push key! DB not ready.", Toast.LENGTH_LONG).show();
-        } else {
-            Toast.makeText(this, "Generated push key: " + id, Toast.LENGTH_SHORT).show();
-        }
-    }
-
 }

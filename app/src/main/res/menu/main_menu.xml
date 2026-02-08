@@ -3,9 +3,9 @@
 
     <!-- Toggle dark/light mode -->
     <item
-        android:id="@+id/menuToggleTheme"
+        android:id="@+id/mmenu_theme"
         android:title="Toggle Theme"
-        app:showAsAction="never" />
+        app:showAsAction="ifRoom" />
 
 
     <item

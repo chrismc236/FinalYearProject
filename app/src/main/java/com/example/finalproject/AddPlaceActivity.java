@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -123,6 +124,7 @@ public class AddPlaceActivity extends AppCompatActivity {
                 long timestamp = System.currentTimeMillis();
 
                 Place place = new Place(title, desc, uri.toString(), timestamp);
+                place.setId(id);
 
                 dbRef.child(id).setValue(place).addOnCompleteListener(dbTask -> {
                     progressBar.setVisibility(View.GONE);
@@ -136,7 +138,11 @@ public class AddPlaceActivity extends AppCompatActivity {
                         setResult(RESULT_OK, intent);
                         finish();
                     } else {
-                        Toast.makeText(AddPlaceActivity.this, "Database save failed!", Toast.LENGTH_SHORT).show();
+                        String error = dbTask.getException() != null ?
+                                dbTask.getException().getMessage() : "Unknown error";
+                        Toast.makeText(AddPlaceActivity.this, "Database save failed: " + error, Toast.LENGTH_SHORT).show();
+
+                        Log.e("AddPlaceActivity", "Database save failed: " + error);
                     }
                 });
             }).addOnFailureListener(e -> {

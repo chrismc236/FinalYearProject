@@ -11,4 +11,6 @@
     <string name="change_app_appearance">Change App Appearance</string>
     <string name="cardimage">cardImage</string>
     <string name="trekkr">Trekkr</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

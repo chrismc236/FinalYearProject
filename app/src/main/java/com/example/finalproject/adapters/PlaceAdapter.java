@@ -59,7 +59,7 @@ public class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.PlaceViewHol
 
         holder.itemView.setOnClickListener(v -> showPlacePopup(place));
 
-        // Long press for delete (existing code)
+        // Long press for delete
         holder.itemView.setOnLongClickListener(v -> {
             new AlertDialog.Builder(context)
                     .setTitle("Delete Place")
@@ -97,7 +97,6 @@ public class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.PlaceViewHol
         dialog.show();
     }
 
-
     @Override
     public int getItemCount() {
         return placeList.size();
@@ -112,8 +111,9 @@ public class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.PlaceViewHol
             dbRef.removeValue().addOnSuccessListener(v -> {
                 Toast.makeText(context, "Place deleted successfully", Toast.LENGTH_SHORT).show();
                 // Remove from local list and notify adapter
-                placeList.remove(place);
-                notifyDataSetChanged();
+                placeList.remove(position);
+                notifyItemRemoved(position);
+                notifyItemRangeChanged(position, placeList.size());
             }).addOnFailureListener(e -> {
                 Toast.makeText(context, "Failed to delete from database: " + e.getMessage(), Toast.LENGTH_SHORT).show();
             });
@@ -125,7 +125,6 @@ public class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.PlaceViewHol
     static class PlaceViewHolder extends RecyclerView.ViewHolder {
         ImageView placeImage;
         TextView placeTitle, placeDescription, placeTimestamp;
-        View detailsLayout;
 
         public PlaceViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -133,7 +132,6 @@ public class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.PlaceViewHol
             placeTitle = itemView.findViewById(R.id.placeTitle);
             placeDescription = itemView.findViewById(R.id.placeDescription);
             placeTimestamp = itemView.findViewById(R.id.placeTimestamp);
-            detailsLayout = itemView.findViewById(R.id.detailsLayout);
         }
     }
 }

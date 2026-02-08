@@ -3,100 +3,180 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@color/background_light">
 
-        <!-- Toolbar at the top -->
+        <!-- Toolbar -->
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
+            android:background="@color/primary_dark"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
             android:elevation="4dp"/>
 
-        <!-- Your existing content wrapped in RelativeLayout -->
+        <!-- Main Content with Fragment and Bottom Nav -->
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="16dp">
+            android:layout_height="match_parent">
 
-                <!-- Title -->
-                <TextView
-                    android:id="@+id/titleText"
-                    android:text="@string/trekkr"
-                    android:textSize="24sp"
-                    android:textStyle="bold"
+                <!-- Fragment Container -->
+                <FrameLayout
+                    android:id="@+id/fragmentContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_above="@id/bottomNavigation"/>
+
+                <!-- Bottom Navigation Bar -->
+                <LinearLayout
+                    android:id="@+id/bottomNavigation"
+                    android:layout_width="match_parent"
+                    android:layout_height="70dp"
+                    android:layout_alignParentBottom="true"
+                    android:orientation="horizontal"
+                    android:background="@drawable/bottom_nav_background"
+                    android:elevation="8dp"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp"
+                    android:gravity="center_vertical">
+
+                        <!-- Home Button -->
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:gravity="center">
+
+                                <ImageButton
+                                    android:id="@+id/btnHome"
+                                    android:layout_width="28dp"
+                                    android:layout_height="28dp"
+                                    android:src="@android:drawable/ic_menu_compass"
+                                    android:background="?attr/selectableItemBackgroundBorderless"
+                                    android:scaleType="fitCenter"
+                                    android:contentDescription="Home"
+                                    app:tint="@color/primary_coral" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Home"
+                                    android:textSize="11sp"
+                                    android:textColor="@color/text_secondary"
+                                    android:layout_marginTop="4dp"/>
+
+                        </LinearLayout>
+
+                        <!-- Map Button -->
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:gravity="center">
+
+                                <ImageButton
+                                    android:id="@+id/btnMap"
+                                    android:layout_width="28dp"
+                                    android:layout_height="28dp"
+                                    android:src="@android:drawable/ic_dialog_map"
+                                    android:background="?attr/selectableItemBackgroundBorderless"
+                                    android:scaleType="fitCenter"
+                                    android:contentDescription="Map"
+                                    app:tint="@color/text_secondary" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Map"
+                                    android:textSize="11sp"
+                                    android:textColor="@color/text_secondary"
+                                    android:layout_marginTop="4dp"/>
+
+                        </LinearLayout>
+
+                        <!-- Spacer for FAB -->
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1.2"/>
+
+                        <!-- Search Button -->
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:gravity="center">
+
+                                <ImageButton
+                                    android:id="@+id/btnSearch"
+                                    android:layout_width="28dp"
+                                    android:layout_height="28dp"
+                                    android:src="@android:drawable/ic_menu_search"
+                                    android:background="?attr/selectableItemBackgroundBorderless"
+                                    android:scaleType="fitCenter"
+                                    android:contentDescription="Search"
+                                    app:tint="@color/text_secondary" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Search"
+                                    android:textSize="11sp"
+                                    android:textColor="@color/text_secondary"
+                                    android:layout_marginTop="4dp"/>
+
+                        </LinearLayout>
+
+                        <!-- Profile Button -->
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:gravity="center">
+
+                                <ImageButton
+                                    android:id="@+id/btnProfile"
+                                    android:layout_width="28dp"
+                                    android:layout_height="28dp"
+                                    android:src="@android:drawable/ic_menu_info_details"
+                                    android:background="?attr/selectableItemBackgroundBorderless"
+                                    android:scaleType="fitCenter"
+                                    android:contentDescription="Profile"
+                                    app:tint="@color/text_secondary" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Profile"
+                                    android:textSize="11sp"
+                                    android:textColor="@color/text_secondary"
+                                    android:layout_marginTop="4dp"/>
+
+                        </LinearLayout>
+
+                </LinearLayout>
+
+                <!-- Large Floating Add Button (on top of nav bar) -->
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/fabAdd"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-                <!-- Image Preview Using Glide -->
-                <ImageView
-                    android:id="@+id/sampleImage"
-                    android:layout_below="@id/titleText"
-                    android:layout_marginTop="12dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="200dp"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/placeholder" />
-
-                <!-- Upload Button -->
-                <Button
-                    android:id="@+id/openUploadActivity"
-                    android:layout_below="@id/sampleImage"
-                    android:layout_marginTop="16dp"
-                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/upload_trail_photo" />
-
-                <!-- Tutorials List Button -->
-                <Button
-                    android:id="@+id/openTutorialsButton"
-                    android:layout_below="@id/openUploadActivity"
-                    android:layout_marginTop="12dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/tutorial_videos" />
-
-                <!-- Settings Button -->
-                <Button
-                    android:id="@+id/openSettings"
-                    android:layout_below="@id/openTutorialsButton"
-                    android:layout_marginTop="12dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/change_app_appearance" />
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recyclerView"
-                    android:layout_below="@id/openSettings"
-                    android:layout_above="@id/loadingBar"
-                    android:layout_marginTop="16dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
-
-                <!-- Progress Bar -->
-                <ProgressBar
-                    android:id="@+id/loadingBar"
                     android:layout_alignParentBottom="true"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginBottom="16dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:visibility="gone" />
-
-                <!-- Floating Action Button -->
-                <com.google.android.material.floatingactionbutton.FloatingActionButton
-                    android:id="@+id/fabAddPost"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentBottom="true"
-                    android:layout_margin="16dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:contentDescription="Add new post"
+                    android:layout_marginBottom="45dp"
                     android:src="@android:drawable/ic_input_add"
-                    app:backgroundTint="@color/purple_500"
-                    app:tint="@android:color/white"/>
+                    android:contentDescription="Add Place"
+                    app:backgroundTint="@color/primary_coral"
+                    app:tint="@android:color/white"
+                    app:elevation="8dp"
+                    app:borderWidth="0dp"
+                    app:fabSize="normal"
+                    app:fabCustomSize="64dp"/>
 
         </RelativeLayout>
 
