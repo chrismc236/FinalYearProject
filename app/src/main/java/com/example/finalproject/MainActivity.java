@@ -155,9 +155,23 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle menu item clicks (for theme changing, etc.)
-        if (item.getItemId() == R.menu.main_menu) {
+        int id = item.getItemId();
+
+        if (id == R.id.mmenu_theme) {
             Toast.makeText(this, "Theme changing coming soon!", Toast.LENGTH_SHORT).show();
+            return true;
+        }
+
+        if (id == R.id.menu_profile) {
+            Intent i = new Intent(MainActivity.this, ProfileFragment.class);
+            startActivity(i);
+            return true;
+        }
+
+        if (id == R.id.menu_logout) {
+            FirebaseAuth.getInstance().signOut();
+            startActivity(new Intent(this, LoginActivity.class));
+            finish();
             return true;
         }
         return super.onOptionsItemSelected(item);
