@@ -22,7 +22,7 @@
             android:padding="12dp"
             android:gravity="center_vertical">
 
-            <!-- User Avatar (placeholder circle) -->
+            <!-- User Avatar -->
             <ImageView
                 android:layout_width="36dp"
                 android:layout_height="36dp"
@@ -53,12 +53,55 @@
             android:src="@drawable/placeholder"
             android:contentDescription="Place image"/>
 
+        <!-- Action Bar (Like, Comment, etc.) -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="12dp"
+            android:gravity="center_vertical">
+
+            <!-- Like Button -->
+            <ImageView
+                android:id="@+id/btnLike"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:src="@drawable/ic_heart_outline"
+                android:padding="4dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="Like"
+                app:tint="@color/text_secondary" />
+
+            <!-- Likes Count -->
+            <TextView
+                android:id="@+id/placeLikesCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="@color/text_primary"
+                android:layout_marginStart="8dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=" likes"
+                android:textSize="14sp"
+                android:textColor="@color/text_secondary"/>
+
+        </LinearLayout>
+
         <!-- Place Info -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="16dp">
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:paddingBottom="16dp">
 
             <!-- Title -->
             <TextView

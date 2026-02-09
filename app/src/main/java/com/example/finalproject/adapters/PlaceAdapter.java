@@ -13,12 +13,14 @@ import android.app.AlertDialog;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.finalproject.R;
 import com.example.finalproject.models.Place;
 import com.example.finalproject.models.User;
+import com.example.finalproject.utils.LikeHelper;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -36,12 +38,14 @@ public class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.PlaceViewHol
     private static final String TAG = "PlaceAdapter";
     private Context context;
     private ArrayList<Place> placeList;
-    private Map<String, String> userNamesCache; // Cache for user names
+    private Map<String, String> userNamesCache;
+    private LikeHelper likeHelper;
 
     public PlaceAdapter(Context context, ArrayList<Place> placeList) {
         this.context = context;
         this.placeList = placeList;
         this.userNamesCache = new HashMap<>();
+        this.likeHelper = new LikeHelper();
     }
 
     @NonNull
@@ -64,6 +68,52 @@ public class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.PlaceViewHol
 
         // Load username
         loadUsername(place.getUserId(), holder.placeUsername);
+
+        // Set likes count
+        holder.placeLikesCount.setText(String.valueOf(place.getLikesCount()));
+
+        // Check if user has liked this place
+        likeHelper.isPlaceLikedByUser(place.getId(), isLiked -> {
+            if (isLiked) {
+                holder.btnLike.setImageResource(R.drawable.ic_heart_filled);
+                holder.btnLike.setColorFilter(ContextCompat.getColor(context, R.color.primary_coral));
+            } else {
+                holder.btnLike.setImageResource(R.drawable.ic_heart_outline);
+                holder.btnLike.setColorFilter(ContextCompat.getColor(context, R.color.text_secondary));
+            }
+        });
+
+        // Like button click
+        holder.btnLike.setOnClickListener(v -> {
+            likeHelper.toggleLike(place.getId(), new LikeHelper.OnLikeToggledListener() {
+                @Override
+                public void onLikeAdded() {
+                    holder.btnLike.setImageResource(R.drawable.ic_heart_filled);
+                    holder.btnLike.setColorFilter(ContextCompat.getColor(context, R.color.primary_coral));
+
+                    // Update count
+                    int newCount = place.getLikesCount() + 1;
+                    place.setLikesCount(newCount);
+                    holder.placeLikesCount.setText(String.valueOf(newCount));
+                }
+
+                @Override
+                public void onLikeRemoved() {
+                    holder.btnLike.setImageResource(R.drawable.ic_heart_outline);
+                    holder.btnLike.setColorFilter(ContextCompat.getColor(context, R.color.text_secondary));
+
+                    // Update count
+                    int newCount = Math.max(0, place.getLikesCount() - 1);
+                    place.setLikesCount(newCount);
+                    holder.placeLikesCount.setText(String.valueOf(newCount));
+                }
+
+                @Override
+                public void onError(String error) {
+                    Toast.makeText(context, error, Toast.LENGTH_SHORT).show();
+                }
+            });
+        });
 
         // Load image
         Glide.with(context)
@@ -91,13 +141,11 @@ public class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.PlaceViewHol
             return;
         }
 
-        // Check cache first
         if (userNamesCache.containsKey(userId)) {
             usernameTextView.setText(userNamesCache.get(userId));
             return;
         }
 
-        // Load from Firebase
         DatabaseReference userRef = FirebaseDatabase.getInstance()
                 .getReference("users")
                 .child(userId);
@@ -108,7 +156,7 @@ public class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.PlaceViewHol
                 User user = snapshot.getValue(User.class);
                 if (user != null && user.getName() != null) {
                     String username = user.getName();
-                    userNamesCache.put(userId, username); // Cache it
+                    userNamesCache.put(userId, username);
                     usernameTextView.setText(username);
                 } else {
                     usernameTextView.setText("Unknown User");
@@ -132,6 +180,8 @@ public class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.PlaceViewHol
         TextView detailDescription = dialog.findViewById(R.id.detailDescription);
         TextView detailTimestamp = dialog.findViewById(R.id.detailTimestamp);
         TextView detailUsername = dialog.findViewById(R.id.detailUsername);
+        TextView detailLikesCount = dialog.findViewById(R.id.detailLikesCount);
+        ImageView btnDetailLike = dialog.findViewById(R.id.btnDetailLike);
         Button btnClose = dialog.findViewById(R.id.btnClose);
 
         Glide.with(context)
@@ -145,8 +195,53 @@ public class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.PlaceViewHol
         String formattedTime = android.text.format.DateFormat.format("dd MMM yyyy, HH:mm", place.getTimestamp()).toString();
         detailTimestamp.setText("Uploaded on: " + formattedTime);
 
-        // Load username for detail view
         loadUsername(place.getUserId(), detailUsername);
+
+        // Set likes count
+        detailLikesCount.setText(String.valueOf(place.getLikesCount()) + " likes");
+
+        // Check like status
+        likeHelper.isPlaceLikedByUser(place.getId(), isLiked -> {
+            if (isLiked) {
+                btnDetailLike.setImageResource(R.drawable.ic_heart_filled);
+                btnDetailLike.setColorFilter(ContextCompat.getColor(context, R.color.primary_coral));
+            } else {
+                btnDetailLike.setImageResource(R.drawable.ic_heart_outline);
+                btnDetailLike.setColorFilter(ContextCompat.getColor(context, android.R.color.white));
+            }
+        });
+
+        // Like button in popup
+        btnDetailLike.setOnClickListener(v -> {
+            likeHelper.toggleLike(place.getId(), new LikeHelper.OnLikeToggledListener() {
+                @Override
+                public void onLikeAdded() {
+                    btnDetailLike.setImageResource(R.drawable.ic_heart_filled);
+                    btnDetailLike.setColorFilter(ContextCompat.getColor(context, R.color.primary_coral));
+
+                    int newCount = place.getLikesCount() + 1;
+                    place.setLikesCount(newCount);
+                    detailLikesCount.setText(newCount + " likes");
+                    notifyDataSetChanged();
+                }
+
+                @Override
+                public void onLikeRemoved() {
+                    btnDetailLike.setImageResource(R.drawable.ic_heart_outline);
+                    btnDetailLike.setColorFilter(ContextCompat.getColor(context, android.R.color.white));
+
+                    int newCount = Math.max(0, place.getLikesCount() - 1);
+                    place.setLikesCount(newCount);
+                    detailLikesCount.setText(newCount + " likes");
+                    notifyDataSetChanged();
+                }
+
+                @Override
+                public void onError(String error) {
+                    Toast.makeText(context, error, Toast.LENGTH_SHORT).show();
+                }
+            });
+        });
 
         btnClose.setOnClickListener(v -> dialog.dismiss());
 
@@ -177,7 +272,8 @@ public class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.PlaceViewHol
 
     static class PlaceViewHolder extends RecyclerView.ViewHolder {
         ImageView placeImage;
-        TextView placeTitle, placeDescription, placeTimestamp, placeUsername;
+        TextView placeTitle, placeDescription, placeTimestamp, placeUsername, placeLikesCount;
+        ImageView btnLike;
 
         public PlaceViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -186,6 +282,8 @@ public class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.PlaceViewHol
             placeDescription = itemView.findViewById(R.id.placeDescription);
             placeTimestamp = itemView.findViewById(R.id.placeTimestamp);
             placeUsername = itemView.findViewById(R.id.placeUsername);
+            placeLikesCount = itemView.findViewById(R.id.placeLikesCount);
+            btnLike = itemView.findViewById(R.id.btnLike);
         }
     }
 }

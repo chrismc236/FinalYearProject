@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#000000">
@@ -16,7 +15,7 @@
         android:text="✕"
         android:textSize="24sp"
         android:textColor="@android:color/white"
-        android:background="@android:color/transparent" />
+        android:background="@android:color/transparent"/>
 
     <!-- Full Screen Image -->
     <ImageView
@@ -24,7 +23,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="fitCenter"
-        android:contentDescription="Place detail image" />
+        android:contentDescription="Place detail image"/>
 
     <!-- Info Overlay at Bottom -->
     <LinearLayout
@@ -34,6 +33,38 @@
         android:orientation="vertical"
         android:background="#CC000000"
         android:padding="20dp">
+
+        <!-- Like Button and Count -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="12dp">
+
+            <ImageView
+                android:id="@+id/btnDetailLike"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:src="@drawable/ic_heart_outline"
+                android:tint="@android:color/white"
+                android:padding="6dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="Like"/>
+
+            <TextView
+                android:id="@+id/detailLikesCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0 likes"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@android:color/white"
+                android:layout_marginStart="12dp"/>
+
+        </LinearLayout>
 
         <!-- Username -->
         <LinearLayout
@@ -47,8 +78,8 @@
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:src="@android:drawable/ic_menu_myplaces"
-                android:padding="6dp"
-                app:tint="@color/primary_coral" />
+                android:tint="@color/primary_coral"
+                android:padding="6dp"/>
 
             <TextView
                 android:id="@+id/detailUsername"
