@@ -17,6 +17,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.finalproject.models.Place;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
@@ -28,6 +29,7 @@ import java.util.UUID;
 
 public class AddPlaceActivity extends AppCompatActivity {
 
+    private static final String TAG = "AddPlaceActivity";
     private static final int CAMERA_REQUEST = 100;
 
     private ImageView previewImage;
@@ -39,12 +41,14 @@ public class AddPlaceActivity extends AppCompatActivity {
 
     private DatabaseReference dbRef;
     private StorageReference storageRef;
+    private FirebaseAuth firebaseAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_place);
 
+        // Initialize views
         previewImage = findViewById(R.id.previewImage);
         titleInput = findViewById(R.id.inputTitle);
         descInput = findViewById(R.id.inputDescription);
@@ -52,9 +56,12 @@ public class AddPlaceActivity extends AppCompatActivity {
         btnSave = findViewById(R.id.btnSave);
         progressBar = findViewById(R.id.progressBar);
 
+        // Initialize Firebase
         dbRef = FirebaseDatabase.getInstance().getReference("places");
         storageRef = FirebaseStorage.getInstance().getReference("places_images");
+        firebaseAuth = FirebaseAuth.getInstance();
 
+        // Button listeners
         btnTakePhoto.setOnClickListener(v -> openCamera());
         btnSave.setOnClickListener(v -> uploadPlace());
     }
@@ -73,25 +80,41 @@ public class AddPlaceActivity extends AppCompatActivity {
             if (extras != null) {
                 capturedBitmap = (Bitmap) extras.get("data");
                 previewImage.setImageBitmap(capturedBitmap);
+                Log.d(TAG, "Photo captured successfully");
             }
         }
     }
 
     private void uploadPlace() {
+        // Validation
         if (capturedBitmap == null) {
             Toast.makeText(this, "Take a picture first!", Toast.LENGTH_SHORT).show();
             return;
         }
+
         String title = titleInput.getText().toString().trim();
         String desc = descInput.getText().toString().trim();
+
         if (title.isEmpty()) {
             titleInput.setError("Required");
+            titleInput.requestFocus();
             return;
         }
+
         if (desc.isEmpty()) {
             descInput.setError("Required");
+            descInput.requestFocus();
             return;
         }
+
+        // Check authentication
+        if (firebaseAuth.getCurrentUser() == null) {
+            Toast.makeText(this, "Please log in to upload", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Get current user ID
+        String userId = firebaseAuth.getCurrentUser().getUid();
 
         progressBar.setVisibility(View.VISIBLE);
         progressBar.setProgress(0);
@@ -104,6 +127,7 @@ public class AddPlaceActivity extends AppCompatActivity {
         String fileName = UUID.randomUUID().toString() + ".jpg";
         StorageReference fileRef = storageRef.child(fileName);
 
+        // Upload to Firebase Storage
         UploadTask uploadTask = fileRef.putBytes(data);
 
         uploadTask.addOnProgressListener(snapshot -> {
@@ -121,18 +145,18 @@ public class AddPlaceActivity extends AppCompatActivity {
                     progressBar.setVisibility(View.GONE);
                     return;
                 }
+
                 long timestamp = System.currentTimeMillis();
 
-                Place place = new Place(title, desc, uri.toString(), timestamp);
+                // Create Place with userId
+                Place place = new Place(title, desc, uri.toString(), timestamp, userId);
                 place.setId(id);
 
                 dbRef.child(id).setValue(place).addOnCompleteListener(dbTask -> {
                     progressBar.setVisibility(View.GONE);
 
                     if (dbTask.isSuccessful()) {
-                        progressBar.setVisibility(View.GONE);
                         Toast.makeText(AddPlaceActivity.this, "Saved to database!", Toast.LENGTH_SHORT).show();
-                        // Return to previous activity so RecyclerView can refresh
                         Intent intent = new Intent();
                         intent.putExtra("upload_success", true);
                         setResult(RESULT_OK, intent);
@@ -140,9 +164,9 @@ public class AddPlaceActivity extends AppCompatActivity {
                     } else {
                         String error = dbTask.getException() != null ?
                                 dbTask.getException().getMessage() : "Unknown error";
-                        Toast.makeText(AddPlaceActivity.this, "Database save failed: " + error, Toast.LENGTH_SHORT).show();
-
-                        Log.e("AddPlaceActivity", "Database save failed: " + error);
+                        Toast.makeText(AddPlaceActivity.this,
+                                "Database save failed: " + error,
+                                Toast.LENGTH_LONG).show();
                     }
                 });
             }).addOnFailureListener(e -> {

@@ -11,13 +11,11 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.finalproject.models.User;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class SignUpActivity extends AppCompatActivity {
 
@@ -51,9 +49,7 @@ public class SignUpActivity extends AppCompatActivity {
         btnSignUp.setOnClickListener(v -> signUpUser());
 
         // Login text click
-        tvLogin.setOnClickListener(v -> {
-            finish(); // Go back to login
-        });
+        tvLogin.setOnClickListener(v -> finish());
     }
 
     private void signUpUser() {
@@ -97,15 +93,34 @@ public class SignUpActivity extends AppCompatActivity {
         progressBar.setVisibility(View.VISIBLE);
         btnSignUp.setEnabled(false);
 
-        // Create user with Firebase
+        // Create user with Firebase Auth
         firebaseAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        // Sign up successful
-                        FirebaseUser user = firebaseAuth.getCurrentUser();
-                        if (user != null) {
-                            // Save user info to database
-                            saveUserToDatabase(user.getUid(), name, email);
+                        // Get the created user
+                        FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+                        if (firebaseUser != null) {
+                            // Create User object
+                            String userId = firebaseUser.getUid();
+                            User user = new User(userId, name, email);
+
+                            // Save user to Realtime Database
+                            usersRef.child(userId).setValue(user)
+                                    .addOnSuccessListener(aVoid -> {
+                                        progressBar.setVisibility(View.GONE);
+                                        btnSignUp.setEnabled(true);
+                                        Toast.makeText(SignUpActivity.this,
+                                                "Account created successfully!",
+                                                Toast.LENGTH_SHORT).show();
+                                        goToMainActivity();
+                                    })
+                                    .addOnFailureListener(e -> {
+                                        progressBar.setVisibility(View.GONE);
+                                        btnSignUp.setEnabled(true);
+                                        Toast.makeText(SignUpActivity.this,
+                                                "Failed to save user data: " + e.getMessage(),
+                                                Toast.LENGTH_SHORT).show();
+                                    });
                         }
                     } else {
                         // Sign up failed
@@ -117,29 +132,6 @@ public class SignUpActivity extends AppCompatActivity {
                             errorMessage = task.getException().getMessage();
                         }
                         Toast.makeText(SignUpActivity.this, errorMessage, Toast.LENGTH_LONG).show();
-                    }
-                });
-    }
-
-    private void saveUserToDatabase(String userId, String name, String email) {
-        // Create user data
-        Map<String, Object> userData = new HashMap<>();
-        userData.put("userId", userId);
-        userData.put("name", name);
-        userData.put("email", email);
-        userData.put("createdAt", System.currentTimeMillis());
-
-        // Save to database
-        usersRef.child(userId).setValue(userData)
-                .addOnCompleteListener(task -> {
-                    progressBar.setVisibility(View.GONE);
-                    btnSignUp.setEnabled(true);
-
-                    if (task.isSuccessful()) {
-                        Toast.makeText(SignUpActivity.this, "Account created successfully!", Toast.LENGTH_SHORT).show();
-                        goToMainActivity();
-                    } else {
-                        Toast.makeText(SignUpActivity.this, "Failed to save user data", Toast.LENGTH_SHORT).show();
                     }
                 });
     }

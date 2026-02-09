@@ -15,8 +15,15 @@ import androidx.fragment.app.Fragment;
 
 import com.example.finalproject.LoginActivity;
 import com.example.finalproject.R;
+import com.example.finalproject.models.User;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 public class ProfileFragment extends Fragment {
 
@@ -28,14 +35,18 @@ public class ProfileFragment extends Fragment {
     private Button btnLogout;
 
     private FirebaseAuth firebaseAuth;
+    private DatabaseReference usersRef;
+    private DatabaseReference placesRef;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
-        // Initialize Firebase Auth
+        // Initialize Firebase
         firebaseAuth = FirebaseAuth.getInstance();
+        usersRef = FirebaseDatabase.getInstance().getReference("users");
+        placesRef = FirebaseDatabase.getInstance().getReference("places");
 
         // Initialize views
         profileEmail = view.findViewById(R.id.profileEmail);
@@ -61,7 +72,6 @@ public class ProfileFragment extends Fragment {
             firebaseAuth.signOut();
             Toast.makeText(getContext(), "Logged out successfully", Toast.LENGTH_SHORT).show();
 
-            // Navigate to login screen
             Intent intent = new Intent(getActivity(), LoginActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
@@ -74,22 +84,50 @@ public class ProfileFragment extends Fragment {
     }
 
     private void loadUserData() {
-        FirebaseUser user = firebaseAuth.getCurrentUser();
+        FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
 
-        if (user != null) {
-            // Set email
-            profileEmail.setText(user.getEmail());
+        if (firebaseUser != null) {
+            String userId = firebaseUser.getUid();
 
-            // Set name (placeholder - you can get this from Firebase Database later)
-            String displayName = user.getDisplayName();
-            if (displayName != null && !displayName.isEmpty()) {
-                profileName.setText(displayName);
-            } else {
-                profileName.setText("Traveler");
-            }
+            // Load user info from database
+            usersRef.child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    User user = snapshot.getValue(User.class);
+                    if (user != null) {
+                        // Set name
+                        profileName.setText(user.getName() != null ? user.getName() : "Traveler");
+                        // Set email
+                        profileEmail.setText(user.getEmail());
+                    } else {
+                        // Fallback if user data not in database
+                        profileName.setText("Traveler");
+                        profileEmail.setText(firebaseUser.getEmail());
+                    }
+                }
 
-            // Placeholder for posts count
-            profilePostsCount.setText("0 Posts");
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    // Fallback on error
+                    profileName.setText("Traveler");
+                    profileEmail.setText(firebaseUser.getEmail());
+                }
+            });
+
+            // Count user's posts
+            Query userPlacesQuery = placesRef.orderByChild("userId").equalTo(userId);
+            userPlacesQuery.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    long postCount = snapshot.getChildrenCount();
+                    profilePostsCount.setText(postCount + (postCount == 1 ? " Post" : " Posts"));
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    profilePostsCount.setText("0 Posts");
+                }
+            });
         }
     }
 }
