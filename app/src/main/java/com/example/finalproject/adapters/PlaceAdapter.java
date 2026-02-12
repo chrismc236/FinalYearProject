@@ -128,7 +128,7 @@ public class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.PlaceViewHol
             new AlertDialog.Builder(context)
                     .setTitle("Delete Place")
                     .setMessage("Are you sure you want to delete this place?")
-                    .setPositiveButton("Yes", (dialog, which) -> deletePlace(place, position))
+                    .setPositiveButton("Yes", (dialog, which) -> deletePlace(place, holder.getBindingAdapterPosition()))
                     .setNegativeButton("No", null)
                     .show();
             return true;
