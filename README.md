@@ -1,6 +1,5 @@
 ## Download App
 
-<img src="/qr_code_download.png" width="200" height="200">
 
 
 ### Installation Instructions
