@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
 
     // Bottom navigation buttons
     private ImageButton btnHome;
-    private ImageButton btnMap;
+    private ImageButton btnAI;
     private FloatingActionButton fabAdd;
     private ImageButton btnSearch;
     private ImageButton btnProfile;
@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Initialize bottom navigation buttons
         btnHome = findViewById(R.id.btnHome);
-        btnMap = findViewById(R.id.btnMap);
+        btnAI = findViewById(R.id.btnAI);
         fabAdd = findViewById(R.id.fabAdd);
         btnSearch = findViewById(R.id.btnSearch);
         btnProfile = findViewById(R.id.btnProfile);
@@ -92,20 +92,10 @@ public class MainActivity extends AppCompatActivity {
         });
 
         // Map button - Open Google Maps
-        btnMap.setOnClickListener(v -> {
-            try {
-                // Open Google Maps
-                Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setData(Uri.parse("geo:0,0?q="));
-                intent.setPackage("com.google.android.apps.maps");
-                startActivity(intent);
-            } catch (Exception e) {
-                // If Google Maps is not installed, open in browser
-                Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setData(Uri.parse("https://maps.google.com"));
-                startActivity(intent);
-            }
-            highlightButton(btnMap);
+        btnAI.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, AIChatActivity.class);
+            startActivity(intent);
+            highlightButton(btnAI);
         });
 
         // Add button (Large FAB)
@@ -139,7 +129,7 @@ public class MainActivity extends AppCompatActivity {
     private void highlightButton(ImageButton selectedButton) {
         // Reset all buttons to default color
         btnHome.setColorFilter(getResources().getColor(R.color.text_secondary));
-        btnMap.setColorFilter(getResources().getColor(R.color.text_secondary));
+        btnAI.setColorFilter(getResources().getColor(R.color.text_secondary));
         btnSearch.setColorFilter(getResources().getColor(R.color.text_secondary));
         btnProfile.setColorFilter(getResources().getColor(R.color.text_secondary));
 

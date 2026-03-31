@@ -70,34 +70,35 @@
                         </LinearLayout>
 
                         <!-- Map Button -->
+
+                        <!-- Spacer for FAB -->
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
                             android:layout_weight="1"
-                            android:orientation="vertical"
-                            android:gravity="center">
+                            android:gravity="center"
+                            android:orientation="vertical">
 
                                 <ImageButton
-                                    android:id="@+id/btnMap"
+                                    android:id="@+id/btnAI"
                                     android:layout_width="28dp"
                                     android:layout_height="28dp"
-                                    android:src="@android:drawable/ic_dialog_map"
                                     android:background="?attr/selectableItemBackgroundBorderless"
+                                    android:contentDescription="AIChat"
                                     android:scaleType="fitCenter"
-                                    android:contentDescription="Map"
+                                    android:src="@drawable/travel"
                                     app:tint="@color/text_secondary" />
 
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="Map"
-                                    android:textSize="11sp"
+                                    android:layout_marginTop="4dp"
+                                    android:text="Agent"
                                     android:textColor="@color/text_secondary"
-                                    android:layout_marginTop="4dp"/>
+                                    android:textSize="11sp" />
 
                         </LinearLayout>
 
-                        <!-- Spacer for FAB -->
                         <View
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
