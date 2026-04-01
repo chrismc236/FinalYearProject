@@ -85,7 +85,12 @@ dependencies {
     implementation("androidx.cardview:cardview:1.0.0")
     // Material Design Components
     implementation("com.google.android.material:material:1.12.0")
-
     // RecyclerView
     implementation("androidx.recyclerview:recyclerview:1.3.2")
+    // Google Maps SDK
+    implementation("com.google.android.gms:play-services-maps:18.2.0")
+    implementation("com.google.android.gms:play-services-location:21.3.0")
+    // Map Tools for Clustering
+    implementation("com.google.maps.android:android-maps-utils:3.8.2")
+
 }

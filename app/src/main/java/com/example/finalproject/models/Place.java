@@ -1,29 +1,39 @@
 package com.example.finalproject.models;
 
 public class Place {
+
     private String id;
     private String userId;
     private String title;
     private String description;
     private String imageUrl;
     private long timestamp;
-    private int likesCount;  // NEW: Number of likes
+    private int likesCount;
+
+    private double lat;
+    private double lng;
 
     // Empty constructor required for Firebase
     public Place() {
     }
 
-    // Updated constructor
-    public Place(String title, String description, String imageUrl, long timestamp, String userId) {
+    public Place(String title, String description, String imageUrl,
+                 long timestamp, String userId) {
+
         this.title = title;
         this.description = description;
         this.imageUrl = imageUrl;
         this.timestamp = timestamp;
         this.userId = userId;
-        this.likesCount = 0;  // Initialize to 0
+        this.likesCount = 0;
+
+        // default coords (means "not set")
+        this.lat = 0;
+        this.lng = 0;
     }
 
-    // Getters
+    // ===== GETTERS =====
+
     public String getId() {
         return id;
     }
@@ -52,7 +62,16 @@ public class Place {
         return likesCount;
     }
 
-    // Setters
+    public double getLat() {
+        return lat;
+    }
+
+    public double getLng() {
+        return lng;
+    }
+
+    // ===== SETTERS =====
+
     public void setId(String id) {
         this.id = id;
     }
@@ -79,5 +98,13 @@ public class Place {
 
     public void setLikesCount(int likesCount) {
         this.likesCount = likesCount;
+    }
+
+    public void setLat(double lat) {
+        this.lat = lat;
+    }
+
+    public void setLng(double lng) {
+        this.lng = lng;
     }
 }
