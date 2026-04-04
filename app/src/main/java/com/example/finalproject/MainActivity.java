@@ -152,12 +152,6 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
 
-        if (id == R.id.menu_profile) {
-            Intent i = new Intent(MainActivity.this, ProfileFragment.class);
-            startActivity(i);
-            return true;
-        }
-
         if (id == R.id.menu_logout) {
             FirebaseAuth.getInstance().signOut();
             startActivity(new Intent(this, LoginActivity.class));

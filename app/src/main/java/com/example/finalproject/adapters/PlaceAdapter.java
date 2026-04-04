@@ -101,12 +101,14 @@ public class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.PlaceViewHol
 
         holder.btnLike.setOnClickListener(v -> {
             likeHelper.toggleLike(place.getId(), new LikeHelper.OnLikeToggledListener() {
+                int currentPos = holder.getBindingAdapterPosition();
                 @Override public void onLikeAdded() {
                     holder.btnLike.setImageResource(R.drawable.ic_heart_filled);
                     holder.btnLike.setColorFilter(ContextCompat.getColor(context, R.color.primary_coral));
                     int n = place.getLikesCount() + 1;
                     place.setLikesCount(n);
                     holder.placeLikesCount.setText(String.valueOf(n));
+                    if (currentPos != RecyclerView.NO_ID) notifyItemChanged(currentPos);
                 }
                 @Override public void onLikeRemoved() {
                     holder.btnLike.setImageResource(R.drawable.ic_heart_outline);
@@ -114,6 +116,7 @@ public class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.PlaceViewHol
                     int n = Math.max(0, place.getLikesCount() - 1);
                     place.setLikesCount(n);
                     holder.placeLikesCount.setText(String.valueOf(n));
+                    if (currentPos != RecyclerView.NO_ID) notifyItemChanged(currentPos);
                 }
                 @Override public void onError(String error) {
                     Toast.makeText(context, error, Toast.LENGTH_SHORT).show();
@@ -187,13 +190,13 @@ public class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.PlaceViewHol
                         btnDetailLike.setImageResource(R.drawable.ic_heart_filled);
                         btnDetailLike.setColorFilter(ContextCompat.getColor(context, R.color.primary_coral));
                         int n = place.getLikesCount() + 1; place.setLikesCount(n);
-                        detailLikesCount.setText(n + " likes"); notifyDataSetChanged();
+                        detailLikesCount.setText(n + " likes");
                     }
                     @Override public void onLikeRemoved() {
                         btnDetailLike.setImageResource(R.drawable.ic_heart_outline);
                         btnDetailLike.setColorFilter(ContextCompat.getColor(context, android.R.color.white));
                         int n = Math.max(0, place.getLikesCount() - 1); place.setLikesCount(n);
-                        detailLikesCount.setText(n + " likes"); notifyDataSetChanged();
+                        detailLikesCount.setText(n + " likes");
                     }
                     @Override public void onError(String error) {
                         Toast.makeText(context, error, Toast.LENGTH_SHORT).show();

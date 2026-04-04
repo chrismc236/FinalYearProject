@@ -7,13 +7,6 @@
         android:title="Toggle Theme"
         app:showAsAction="ifRoom" />
 
-
-    <item
-        android:id="@+id/menu_profile"
-        android:title="My Profile"
-        android:icon="@android:drawable/ic_menu_myplaces"
-        app:showAsAction="never"/>
-
     <item
         android:id="@+id/menu_logout"
         android:title="Logout"

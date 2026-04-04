@@ -28,9 +28,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-/**
- * Home Fragment - Displays the feed of places
- */
 public class HomeFragment extends Fragment {
 
     private static final String TAG = "HomeFragment";
@@ -44,53 +41,42 @@ public class HomeFragment extends Fragment {
     private List<Place> placeList;
     private DatabaseReference placesRef;
 
+    // Store the listener so we can remove it later
+    private ValueEventListener placesListener;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
-        // Initialize Firebase
         placesRef = FirebaseDatabase.getInstance().getReference("places");
 
-        // Initialize views
-        recyclerView = view.findViewById(R.id.recyclerView);
-        progressBar = view.findViewById(R.id.progressBar);
-        emptyStateLayout = view.findViewById(R.id.emptyStateLayout);
-        emptyStateText = view.findViewById(R.id.emptyStateText);
+        recyclerView      = view.findViewById(R.id.recyclerView);
+        progressBar       = view.findViewById(R.id.progressBar);
+        emptyStateLayout  = view.findViewById(R.id.emptyStateLayout);
+        emptyStateText    = view.findViewById(R.id.emptyStateText);
 
-        // Set up RecyclerView
-        placeList = new ArrayList<>();
+        placeList   = new ArrayList<>();
         placeAdapter = new PlaceAdapter(getContext(), (ArrayList<Place>) placeList);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(placeAdapter);
 
-        // Load places
-        loadPlaces();
+        // Attach the persistent listener once, here in onCreateView
+        attachListener();
 
         return view;
     }
 
-    private void loadPlaces() {
-        Log.d(TAG, "Loading places from Firebase...");
+    private void attachListener() {
         progressBar.setVisibility(View.VISIBLE);
         emptyStateLayout.setVisibility(View.GONE);
 
-        placesRef.addValueEventListener(new ValueEventListener() {
+        placesListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 placeList.clear();
-
-                Log.d(TAG, "Data snapshot received. Number of children: " + snapshot.getChildrenCount());
-
-                if (!snapshot.exists()) {
-                    Log.d(TAG, "No places found in database");
-                    progressBar.setVisibility(View.GONE);
-                    emptyStateLayout.setVisibility(View.VISIBLE);
-                    emptyStateText.setText("Start sharing your travel moments!");
-                    return;
-                }
 
                 for (DataSnapshot placeSnapshot : snapshot.getChildren()) {
                     try {
@@ -100,14 +86,12 @@ public class HomeFragment extends Fragment {
                                 place.setId(placeSnapshot.getKey());
                             }
                             placeList.add(place);
-                            Log.d(TAG, "Loaded place: " + place.getTitle());
                         }
                     } catch (Exception e) {
                         Log.e(TAG, "Error parsing place: " + e.getMessage());
                     }
                 }
 
-                // Sort by timestamp (newest first)
                 Collections.sort(placeList, (p1, p2) ->
                         Long.compare(p2.getTimestamp(), p1.getTimestamp()));
 
@@ -116,10 +100,9 @@ public class HomeFragment extends Fragment {
 
                 if (placeList.isEmpty()) {
                     emptyStateLayout.setVisibility(View.VISIBLE);
-                    emptyStateText.setText("No places found");
+                    emptyStateText.setText("No places found. Start sharing!");
                 } else {
                     emptyStateLayout.setVisibility(View.GONE);
-                    Log.d(TAG, "Successfully loaded " + placeList.size() + " places");
                 }
             }
 
@@ -130,15 +113,31 @@ public class HomeFragment extends Fragment {
                 emptyStateText.setText("Failed to load places");
                 Log.e(TAG, "Database error: " + error.getMessage());
             }
-        });
+        };
+
+        placesRef.addValueEventListener(placesListener);
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        // Reload places when fragment is resumed
-        if (placesRef != null) {
-            loadPlaces();
+    public void onStop() {
+        super.onStop();
+        // Remove the listener when the fragment is not visible
+        // This prevents the double-registration bug when onResume fires
+        if (placesRef != null && placesListener != null) {
+            placesRef.removeEventListener(placesListener);
+            placesListener = null;
         }
     }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        // Re-attach listener when fragment becomes visible again
+        // Only attach if it was removed (i.e. placesListener is null)
+        if (placesRef != null && placesListener == null) {
+            attachListener();
+        }
+    }
+
+    // onResume override removed entirely — it was the source of the bug
 }

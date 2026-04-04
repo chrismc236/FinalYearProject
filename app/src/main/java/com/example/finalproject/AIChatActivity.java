@@ -28,6 +28,12 @@ public class AIChatActivity extends AppCompatActivity {
 
     private final String API_KEY = BuildConfig.OPENAI_API_KEY;
 
+    private final OkHttpClient client = new OkHttpClient.Builder()
+            .connectTimeout(30, java.util.concurrent.TimeUnit.SECONDS)
+            .readTimeout(30, java.util.concurrent.TimeUnit.SECONDS)
+            .writeTimeout(30, java.util.concurrent.TimeUnit.SECONDS)
+            .build();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,11 +95,6 @@ public class AIChatActivity extends AppCompatActivity {
     }
 
     private void callAI(String userMessage) {
-        OkHttpClient client = new OkHttpClient.Builder()
-                .connectTimeout(30, java.util.concurrent.TimeUnit.SECONDS)
-                .readTimeout(30, java.util.concurrent.TimeUnit.SECONDS)
-                .writeTimeout(30, java.util.concurrent.TimeUnit.SECONDS)
-                .build();
 
         try {
             JSONObject json = new JSONObject();
