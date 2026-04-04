@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <!-- User Info Header -->
+        <!-- ── User Header ── -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -22,29 +22,59 @@
             android:padding="12dp"
             android:gravity="center_vertical">
 
-            <!-- User Avatar -->
             <ImageView
                 android:layout_width="36dp"
                 android:layout_height="36dp"
                 android:src="@android:drawable/ic_menu_myplaces"
                 android:padding="8dp"
                 android:background="@drawable/profile_icon_background"
-                app:tint="@color/primary_coral" />
+                app:tint="@color/primary_coral"/>
 
-            <!-- Username -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:layout_marginStart="12dp">
+
+                <TextView
+                    android:id="@+id/placeUsername"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Loading..."
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/text_primary"/>
+
+                <!-- Location badge -->
+                <TextView
+                    android:id="@+id/placeLocation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="📍 Location"
+                    android:textSize="12sp"
+                    android:textColor="@color/text_secondary"
+                    android:visibility="gone"/>
+            </LinearLayout>
+
+            <!-- Category badge -->
             <TextView
-                android:id="@+id/placeUsername"
+                android:id="@+id/placeCategory"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Loading..."
-                android:textSize="14sp"
-                android:textStyle="bold"
-                android:textColor="@color/text_primary"
-                android:layout_marginStart="12dp"/>
+                android:text="🏖️ Beach"
+                android:textSize="11sp"
+                android:textColor="@color/primary_coral"
+                android:background="@drawable/category_badge_bg"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
+                android:visibility="gone"/>
 
         </LinearLayout>
 
-        <!-- Place Image -->
+        <!-- ── Place Image ── -->
         <ImageView
             android:id="@+id/placeImage"
             android:layout_width="match_parent"
@@ -53,7 +83,7 @@
             android:src="@drawable/placeholder"
             android:contentDescription="Place image"/>
 
-        <!-- Action Bar (Like, Comment, etc.) -->
+        <!-- ── Action Bar ── -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -61,7 +91,6 @@
             android:padding="12dp"
             android:gravity="center_vertical">
 
-            <!-- Like Button -->
             <ImageView
                 android:id="@+id/btnLike"
                 android:layout_width="28dp"
@@ -72,9 +101,8 @@
                 android:focusable="true"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="Like"
-                app:tint="@color/text_secondary" />
+                app:tint="@color/text_secondary"/>
 
-            <!-- Likes Count -->
             <TextView
                 android:id="@+id/placeLikesCount"
                 android:layout_width="wrap_content"
@@ -83,7 +111,7 @@
                 android:textSize="14sp"
                 android:textStyle="bold"
                 android:textColor="@color/text_primary"
-                android:layout_marginStart="8dp"/>
+                android:layout_marginStart="6dp"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -92,9 +120,27 @@
                 android:textSize="14sp"
                 android:textColor="@color/text_secondary"/>
 
+            <!-- Spacer -->
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1"/>
+
+            <!-- Ask AI button -->
+            <Button
+                android:id="@+id/btnAskAI"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:text="🤖 Ask AI"
+                android:textSize="12sp"
+                android:backgroundTint="@color/primary_dark"
+                android:textColor="@android:color/white"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"/>
+
         </LinearLayout>
 
-        <!-- Place Info -->
+        <!-- ── Place Info ── -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -103,7 +149,6 @@
             android:paddingEnd="16dp"
             android:paddingBottom="16dp">
 
-            <!-- Title -->
             <TextView
                 android:id="@+id/placeTitle"
                 android:layout_width="match_parent"
@@ -115,19 +160,17 @@
                 android:maxLines="2"
                 android:ellipsize="end"/>
 
-            <!-- Description -->
             <TextView
                 android:id="@+id/placeDescription"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Place description goes here..."
+                android:text="Place description..."
                 android:textSize="14sp"
                 android:textColor="@color/text_secondary"
                 android:maxLines="3"
                 android:ellipsize="end"
-                android:layout_marginTop="8dp"/>
+                android:layout_marginTop="6dp"/>
 
-            <!-- Timestamp -->
             <TextView
                 android:id="@+id/placeTimestamp"
                 android:layout_width="match_parent"
@@ -135,7 +178,7 @@
                 android:text="2 hours ago"
                 android:textSize="12sp"
                 android:textColor="@color/text_secondary"
-                android:layout_marginTop="8dp"/>
+                android:layout_marginTop="6dp"/>
 
         </LinearLayout>
 

@@ -1,8 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#000000">
+
+    <Button
+        android:id="@+id/btnDialogAskAI"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:text="🤖 Ask AI about this place"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:backgroundTint="@color/primary_coral"
+        android:textColor="@android:color/white"
+        android:layout_marginTop="16dp" />
 
     <!-- Close Button -->
     <Button
@@ -15,7 +27,7 @@
         android:text="✕"
         android:textSize="24sp"
         android:textColor="@android:color/white"
-        android:background="@android:color/transparent"/>
+        android:background="@android:color/transparent" />
 
     <!-- Full Screen Image -->
     <ImageView
@@ -23,7 +35,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="fitCenter"
-        android:contentDescription="Place detail image"/>
+        android:contentDescription="Place detail image" />
 
     <!-- Info Overlay at Bottom -->
     <LinearLayout
@@ -47,12 +59,12 @@
                 android:layout_width="36dp"
                 android:layout_height="36dp"
                 android:src="@drawable/ic_heart_outline"
-                android:tint="@android:color/white"
                 android:padding="6dp"
                 android:clickable="true"
                 android:focusable="true"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="Like"/>
+                android:contentDescription="Like"
+                app:tint="@android:color/white" />
 
             <TextView
                 android:id="@+id/detailLikesCount"
@@ -78,8 +90,8 @@
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:src="@android:drawable/ic_menu_myplaces"
-                android:tint="@color/primary_coral"
-                android:padding="6dp"/>
+                android:padding="6dp"
+                app:tint="@color/primary_coral" />
 
             <TextView
                 android:id="@+id/detailUsername"
