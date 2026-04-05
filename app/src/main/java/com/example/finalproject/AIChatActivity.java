@@ -49,6 +49,15 @@ public class AIChatActivity extends AppCompatActivity {
                 sendMessage(message);
             }
         });
+        // Pre-fill message if launched from landmark dialog
+        String initialMessage = getIntent().getStringExtra("initial_message");
+        if (initialMessage != null && !initialMessage.isEmpty()) {
+            userInput.setText(initialMessage);
+            addMessage("You: " + initialMessage, true);
+            userInput.setText("");
+            showTypingBubble();
+            callAI(initialMessage);
+        }
 
         // ── Auto-fire prompt passed from a post card ──────────────
         String autoPrompt = getIntent().getStringExtra("auto_prompt");

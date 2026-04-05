@@ -11,4 +11,33 @@
     <string name="change_app_appearance">Change App Appearance</string>
     <string name="cardimage">cardImage</string>
     <string name="trekkr">Trekkr</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!-- Landmark Descriptions -->
+    <string name="landmark_eiffel_tower">An iron lattice tower built in 1889, standing 330m tall. Originally criticised, it is now one of the most visited monuments in the world.</string>
+    <string name="landmark_colosseum">An oval amphitheatre built in 70–80 AD, capable of holding up to 80,000 spectators for gladiatorial contests and public spectacles.</string>
+    <string name="landmark_machu_picchu">A 15th-century Inca citadel set high in the Andes Mountains at 2,430m. Rediscovered in 1911 by Hiram Bingham.</string>
+    <string name="landmark_great_wall">A series of fortifications stretching over 21,000 km, built across centuries to protect Chinese states from invasions.</string>
+    <string name="landmark_taj_mahal">A white marble mausoleum built by Mughal emperor Shah Jahan in 1643 in memory of his beloved wife Mumtaz Mahal.</string>
+    <string name="landmark_statue_of_liberty">A colossal neoclassical sculpture gifted by France to the USA in 1886. Standing 93m tall, she holds a torch and a tablet inscribed with July 4, 1776.</string>
+    <string name="landmark_sydney_opera_house">A multi-venue performing arts centre opened in 1973. Its distinctive sail-shaped shells have made it one of the most recognisable buildings in the world.</string>
+    <string name="landmark_petra">An ancient city carved into rose-red sandstone cliffs, once the thriving capital of the Nabataean Kingdom around 300 BC.</string>
+    <string name="landmark_chichen_itza">A large pre-Columbian city built by the Maya. The 30m pyramid El Castillo served as a temple to the god Kukulkan.</string>
+    <string name="landmark_santorini">A volcanic island famous for its dramatic cliffs, whitewashed buildings with blue domes, and spectacular sunsets over the caldera.</string>
+    <string name="landmark_angkor_wat">The largest religious monument in the world, built in the 12th century as a Hindu temple and later converted to Buddhism.</string>
+    <string name="landmark_acropolis">A rocky hilltop citadel containing the remains of ancient buildings, most notably the Parthenon, built in 447–438 BC.</string>
+    <string name="landmark_christ_redeemer">A 38m tall Art Deco statue of Jesus Christ, inaugurated in 1931 atop Corcovado mountain overlooking Rio de Janeiro.</string>
+    <string name="landmark_stonehenge">A prehistoric stone circle erected around 2500 BC. Its exact purpose remains debated — astronomical calendar, burial site, or religious monument.</string>
+    <string name="landmark_mount_fuji">Japan\'s highest peak at 3,776m, an active stratovolcano last erupting in 1707. A sacred site and iconic symbol of Japan.</string>
+    <string name="landmark_victoria_falls">One of the world\'s largest waterfalls, 1.7 km wide and 108m tall. Local name \'Mosi-oa-Tunya\' means \'The Smoke That Thunders\'.</string>
+    <string name="landmark_burj_khalifa">The world\'s tallest building at 828m, completed in 2010. Its design was inspired by the Hymenocallis desert flower.</string>
+    <string name="landmark_sagrada_familia">A large unfinished Roman Catholic church designed by Antoni Gaudí, under construction since 1882 and still ongoing today.</string>
+    <string name="landmark_northern_lights">The Aurora Borealis — a natural light display caused by charged solar particles colliding with Earth\'s atmosphere. Best seen September to March.</string>
+    <string name="landmark_galapagos">A volcanic archipelago in the Pacific famous for its unique wildlife, including giant tortoises and marine iguanas. Darwin visited in 1835.</string>
+    <string name="landmark_grand_canyon">A steep-sided canyon carved by the Colorado River, 446 km long and up to 1,800m deep, exposing nearly 2 billion years of Earth\'s history.</string>
+    <string name="landmark_amazon">The world\'s largest tropical rainforest, covering 5.5 million km². Home to 10% of all species on Earth and often called \'the lungs of the planet\'.</string>
+    <string name="landmark_hagia_sophia">Originally a cathedral built in 537 AD, later an Ottoman mosque, then a museum, and reclassified as a mosque again in 2020.</string>
+    <string name="landmark_serengeti">A vast ecosystem of 30,000 km² famous for the annual Great Migration, where over 1.5 million wildebeest cross the plains.</string>
+    <string name="landmark_iguazu_falls">A system of 275 individual waterfalls on the border of Argentina and Brazil. Eleanor Roosevelt reportedly said: \'Poor Niagara!\'</string>
+
 </resources>

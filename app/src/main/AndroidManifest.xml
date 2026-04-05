@@ -38,9 +38,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".TutorialActivity"
-            android:exported="false" />
-        <activity
             android:name=".PlaceDetailsActivity"
             android:exported="false" />
         <activity
@@ -53,6 +50,8 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyAxGJ1PlJMdOOWF1SBeyVtEDWN4mhWhW74"/>
+
+        <activity android:name=".SeedDataActivity" android:exported="true"/>
     </application>
 
 </manifest>
