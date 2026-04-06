@@ -30,6 +30,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -44,11 +45,14 @@ public class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.PlaceViewHol
     private final Map<String, String> userNamesCache;
     private final LikeHelper likeHelper;
 
+    private final FirebaseAuth firebaseAuth;
+
     public PlaceAdapter(Context context, ArrayList<Place> placeList) {
         this.context        = context;
         this.placeList      = placeList;
         this.userNamesCache = new HashMap<>();
         this.likeHelper     = new LikeHelper();
+        this.firebaseAuth = FirebaseAuth.getInstance();
     }
 
     @NonNull
@@ -139,13 +143,23 @@ public class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.PlaceViewHol
 
         // Long-press → delete
         holder.itemView.setOnLongClickListener(v -> {
-            new AlertDialog.Builder(context)
-                    .setTitle("Delete Place")
-                    .setMessage("Are you sure you want to delete \"" + place.getTitle() + "\"?")
-                    .setPositiveButton("Delete", (dialog, which) ->
-                            deletePlace(place, holder.getBindingAdapterPosition()))
-                    .setNegativeButton("Cancel", null)
-                    .show();
+            String currentUserId = firebaseAuth.getCurrentUser() != null
+                    ? firebaseAuth.getCurrentUser().getUid()
+                    : null;
+
+            // Check ownership
+            if (currentUserId != null && currentUserId.equals(place.getUserId())) {
+                new AlertDialog.Builder(context)
+                        .setTitle("Delete Place")
+                        .setMessage("Are you sure you want to delete \"" + place.getTitle() + "\"?")
+                        .setPositiveButton("Delete", (dialog, which) ->
+                                deletePlace(place, holder.getBindingAdapterPosition()))
+                        .setNegativeButton("Cancel", null)
+                        .show();
+            } else {
+                Toast.makeText(context, "You can only delete your own posts", Toast.LENGTH_SHORT).show();
+            }
+
             return true;
         });
     }

@@ -52,6 +52,7 @@ public class AddPlaceActivity extends AppCompatActivity {
 
     // Image state
     private Bitmap capturedBitmap = null;
+    private Uri cameraImageUri;
     private Uri    galleryUri     = null;
 
     // Firebase
@@ -129,8 +130,32 @@ public class AddPlaceActivity extends AppCompatActivity {
     // ─── Camera ───────────────────────────────────
     private void openCamera() {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        startActivityForResult(intent, CAMERA_REQUEST);
+
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            try {
+                java.io.File imageFile = createImageFile();
+
+                cameraImageUri = androidx.core.content.FileProvider.getUriForFile(
+                        this,
+                        getPackageName() + ".provider",
+                        imageFile
+                );
+
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, cameraImageUri);
+                startActivityForResult(intent, CAMERA_REQUEST);
+
+            } catch (Exception e) {
+                Toast.makeText(this, "Error opening camera", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
+
+    private java.io.File createImageFile() throws java.io.IOException {
+        String fileName = "JPEG_" + System.currentTimeMillis();
+        java.io.File storageDir = getExternalFilesDir(android.os.Environment.DIRECTORY_PICTURES);
+        return java.io.File.createTempFile(fileName, ".jpg", storageDir);
+    }
+
 
     // ─── Gallery ──────────────────────────────────
     private void openGallery() {
@@ -148,12 +173,20 @@ public class AddPlaceActivity extends AppCompatActivity {
         if (resultCode != RESULT_OK || data == null) return;
 
         if (requestCode == CAMERA_REQUEST) {
-            Bundle extras = data.getExtras();
-            if (extras != null) {
-                capturedBitmap = (Bitmap) extras.get("data");
-                galleryUri     = null;
-                previewImage.setImageBitmap(capturedBitmap);
-                imagePlaceholder.setVisibility(View.GONE);
+            if (cameraImageUri != null) {
+                galleryUri = cameraImageUri;
+                capturedBitmap = null;
+
+                try {
+                    Bitmap bmp = MediaStore.Images.Media.getBitmap(
+                            getContentResolver(), cameraImageUri);
+
+                    previewImage.setImageBitmap(bmp);
+                    imagePlaceholder.setVisibility(View.GONE);
+
+                } catch (IOException e) {
+                    Toast.makeText(this, "Failed to load image", Toast.LENGTH_SHORT).show();
+                }
             }
 
         } else if (requestCode == GALLERY_REQUEST) {
