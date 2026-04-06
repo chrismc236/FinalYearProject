@@ -166,7 +166,7 @@ Ask AI about landmarks for travel recommendations and information.
 
 ## Demo
 
-*insert video demo here
+https://youtu.be/VmBT0lcH7wc)
 
 
 Built as part of a Final Year Computer Science Project demonstrating mobile development, cloud integration, and AI-assisted user interaction.
