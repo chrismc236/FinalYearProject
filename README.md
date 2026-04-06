@@ -90,71 +90,79 @@ The app includes preloaded sample travel posts featuring:
 ## Screenshots
 
 ### 1. Authentication Flow
-User sign up and login process.
+Login and signup screens for user access.
 
 <p float="left">
-  <img src="screenshots/03. Login Screen.png" width="250"/>
-  <img src="screenshots/04. Sign Up Screen.png" width="250"/>
+  <img src="screenshots/login.png" width="250"/>
+  <img src="screenshots/signup.png" width="250"/>
 </p>
 
 ---
 
-### 2. Home Feed
-Main feed showing travel posts from users.
+### 2. Home Screen
+Main feed showing travel posts and user content.
 
 <p float="left">
-  <img src="screenshots/homescreen.png" width="250"/>
-  <img src="screenshots/homescreen_after_post.png" width="250"/>
+  <img src="screenshots/homescreen1.png" width="250"/>
+  <img src="screenshots/homescreen2.png" width="250"/>
 </p>
 
 ---
 
 ### 3. Create Post Flow
-Step-by-step post creation process.
+Step-by-step process for creating a travel post.
 
 <p float="left">
-  <img src="screenshots/create_post_1.png" width="250"/>
-  <img src="screenshots/create_post_2.png" width="250"/>
-  <img src="screenshots/create_post_3.png" width="250"/>
+  <img src="screenshots/createpost1.png" width="250"/>
+  <img src="screenshots/createpost2.png" width="250"/>
+  <img src="screenshots/createpost3.png" width="250"/>
 </p>
 
 <p float="left">
-  <img src="screenshots/create_post_4.png" width="250"/>
-  <img src="screenshots/create_post_5.png" width="250"/>
-  <img src="screenshots/create_post_6.png" width="250"/>
-</p>
-
----
-
-### 4. AI Assistant (Post-based)
-Ask AI about a specific travel post and receive contextual insights.
-
-<p float="left">
-  <img src="screenshots/ask_ai_post.png" width="250"/>
-  <img src="screenshots/ai_response.png" width="250"/>
-  <img src="screenshots/ai_followup.png" width="250"/>
+  <img src="screenshots/createpost4.png" width="250"/>
+  <img src="screenshots/createpost5.png" width="250"/>
+  <img src="screenshots/createpost6.png" width="250"/>
 </p>
 
 ---
 
-### 5. Map & Landmarks
-Explore travel locations visually on an interactive map.
+### 4. Post AI Assistant
+Ask AI about a specific post and receive contextual travel insights.
 
 <p float="left">
-  <img src="screenshots/map_screen.png" width="250"/>
-  <img src="screenshots/landmark_screen.png" width="250"/>
+  <img src="screenshots/askAiFromPost.png" width="250"/>
+  <img src="screenshots/aiResponse.png" width="250"/>
+  <img src="screenshots/aiResponse2.png" width="250"/>
 </p>
 
 ---
 
-### 6. AI from Landmarks
-Ask AI about real-world landmarks for travel insights.
+### 5. AI Follow-Up Interaction
+Users can continue the AI conversation with follow-up questions.
 
 <p float="left">
-  <img src="screenshots/landmark_ai.png" width="250"/>
-  <img src="screenshots/landmark_ai_response.png" width="250"/>
+  <img src="screenshots/aiFollowUpQuestion.png" width="250"/>
+  <img src="screenshots/responseToFollowUpQuestion.png" width="250"/>
 </p>
 
+---
+
+### 6. Map & Landmarks
+Interactive map showing travel locations and landmark details.
+
+<p float="left">
+  <img src="screenshots/mapScreen.png" width="250"/>
+  <img src="screenshots/landmark.png" width="250"/>
+</p>
+
+---
+
+### 7. Landmark AI Assistant
+Ask AI about landmarks for travel recommendations and information.
+
+<p float="left">
+  <img src="screenshots/askAiFromLandmark.png" width="250"/>
+</p>
 
 ## Demo
 
