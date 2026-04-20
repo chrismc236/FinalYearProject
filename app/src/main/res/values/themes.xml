@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Base application theme -->
-    <style name="Theme.FinalProject" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <style name="Theme.FinalProject" parent="Theme.MaterialComponents.Light.NoActionBar">
         <!-- Primary brand color -->
         <item name="colorPrimary">@color/primary_coral</item>
         <item name="colorPrimaryVariant">@color/primary_dark</item>
@@ -20,5 +20,14 @@
 
         <!-- Navigation bar color -->
         <item name="android:navigationBarColor">@color/card_background</item>
+
+        <!-- Force dark text on light backgrounds throughout the app -->
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:editTextColor">@color/text_primary</item>
+        <item name="android:textColorHint">@color/text_secondary</item>
+
+        <!-- TextInputLayout outline color -->
+        <item name="boxStrokeColor">@color/primary_coral</item>
+        <item name="hintTextColor">@color/text_secondary</item>
     </style>
 </resources>
