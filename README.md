@@ -89,12 +89,84 @@ The app includes preloaded sample travel posts featuring:
 
 ## Screenshots
 
-*insert screenshots here
+### 1. Authentication Flow
+Login and signup screens for user access.
 
+<p float="left">
+  <img src="screenshots/login.png" width="250"/>
+  <img src="screenshots/signup.png" width="250"/>
+</p>
+
+---
+
+### 2. Home Screen
+Main feed showing travel posts and user content.
+
+<p float="left">
+  <img src="screenshots/homescreen1.png" width="250"/>
+  <img src="screenshots/homescreen2.png" width="250"/>
+</p>
+
+---
+
+### 3. Create Post Flow
+Step-by-step process for creating a travel post.
+
+<p float="left">
+  <img src="screenshots/createpost1.png" width="250"/>
+  <img src="screenshots/createpost2.png" width="250"/>
+  <img src="screenshots/createpost3.png" width="250"/>
+</p>
+
+<p float="left">
+  <img src="screenshots/createpost4.png" width="250"/>
+  <img src="screenshots/createpost5.png" width="250"/>
+  <img src="screenshots/createpost6.png" width="250"/>
+</p>
+
+---
+
+### 4. Post AI Assistant
+Ask AI about a specific post and receive contextual travel insights.
+
+<p float="left">
+  <img src="screenshots/askAiFromPost.png" width="250"/>
+  <img src="screenshots/aiResponse.png" width="250"/>
+  <img src="screenshots/aiResponse2.png" width="250"/>
+</p>
+
+---
+
+### 5. AI Follow-Up Interaction
+Users can continue the AI conversation with follow-up questions.
+
+<p float="left">
+  <img src="screenshots/aiFollowUpQuestion.png" width="250"/>
+  <img src="screenshots/responseToFollowUpQuestion.png" width="250"/>
+</p>
+
+---
+
+### 6. Map & Landmarks
+Interactive map showing travel locations and landmark details.
+
+<p float="left">
+  <img src="screenshots/mapScreen.png" width="250"/>
+  <img src="screenshots/landmark.png" width="250"/>
+</p>
+
+---
+
+### 7. Landmark AI Assistant
+Ask AI about landmarks for travel recommendations and information.
+
+<p float="left">
+  <img src="screenshots/askAiFromLandmark.png" width="250"/>
+</p>
 
 ## Demo
 
-*insert video demo here
+https://youtu.be/VmBT0lcH7wc)
 
 
 Built as part of a Final Year Computer Science Project demonstrating mobile development, cloud integration, and AI-assisted user interaction.
